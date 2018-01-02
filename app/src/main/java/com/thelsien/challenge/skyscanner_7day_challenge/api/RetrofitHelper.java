@@ -4,6 +4,8 @@ import com.thelsien.challenge.skyscanner_7day_challenge.model.FlightDetail;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitHelper {
 
-    private static final String API_KEY = "MYAPIKEYHERE";
+    private static final String API_KEY = "MYAPIKEY";
 
     public static Retrofit getBaseRetrofit(String baseUrl) {
         return new Retrofit.Builder()
@@ -50,15 +52,27 @@ public class RetrofitHelper {
                             .getBaseRetrofit(SkyScannerApiService.BASE_URL)
                             .create(SkyScannerApiService.class);
 
+                    Calendar calendar = Calendar.getInstance();
+                    //task specified we need to get the NEXT monday's live pricing,
+                    //so even if today is monday, I skip to the next monday.
+                    if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
+                        calendar.add(Calendar.DATE, 1);
+                    }
+
+                    while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
+                        calendar.add(Calendar.DATE, 1);
+                    }
+
                     Map<String, String> queryOptions = new HashMap<>();
-                    queryOptions.put("apikey", API_KEY); //TODO move to separate file
+                    queryOptions.put("apikey", API_KEY);
                     queryOptions.put("country", "UK");
                     queryOptions.put("currency", "GBP");
                     queryOptions.put("locale", "en-GB");
                     queryOptions.put("originPlace", "EDI-sky");
                     queryOptions.put("destinationPlace", "LHR-sky");
-                    queryOptions.put("outbounddate", "2018-01-08");
-                    queryOptions.put("inbounddate", "2018-01-09");
+                    queryOptions.put("outbounddate", android.text.format.DateFormat.format("yyyy-MM-dd", calendar).toString());
+                    calendar.add(Calendar.DATE, 1);
+                    queryOptions.put("inbounddate", android.text.format.DateFormat.format("yyyy-MM-dd", calendar).toString());
                     queryOptions.put("adults", "1");
 
                     Call<Void> pollingRequestCall = service.createPollingRequest(getIPAddress(true), queryOptions);

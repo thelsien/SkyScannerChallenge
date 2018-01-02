@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/SkyScannerChallenge.iml" filepath="$PROJECT_DIR$/.idea/SkyScannerChallenge.iml" />
+      <module fileurl="file://C:\Users\frodo\StudioProjects\skyscanner7daychallenge\.idea\SkyScannerChallenge.iml" filepath="C:\Users\frodo\StudioProjects\skyscanner7daychallenge\.idea\SkyScannerChallenge.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/skyscanner7daychallenge.iml" filepath="$PROJECT_DIR$/skyscanner7daychallenge.iml" />
     </modules>

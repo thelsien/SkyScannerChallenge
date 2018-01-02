@@ -7,6 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.thelsien.challenge.skyscanner_7day_challenge.model.FlightDetail;
+import com.thelsien.challenge.skyscanner_7day_challenge.model.LivePricingRowModel;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements MainActivityContract.View {
 
@@ -73,18 +76,18 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     }
 
     @Override
-    public void onPaginatedRequestFinished(FlightDetail flightDetail) {
+    public void onPaginatedRequestFinished(List<LivePricingRowModel> livePricings) {
         isLoading = false;
 
-        addItemsToList(flightDetail);
+        addItemsToList(livePricings);
     }
 
-    private void addItemsToList(FlightDetail flightDetail) {
+    private void addItemsToList(List<LivePricingRowModel> livePricings) {
         if (rvList.getAdapter() == null) {
             rvList.setAdapter(new LivePricingAdapter());
         }
 
-        ((LivePricingAdapter) rvList.getAdapter()).addItems(flightDetail.Itineraries);
+        ((LivePricingAdapter) rvList.getAdapter()).addItems(livePricings);
         rvList.getAdapter().notifyDataSetChanged();
     }
 
