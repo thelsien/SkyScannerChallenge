@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/SkyScannerChallenge.iml" filepath="$PROJECT_DIR$/.idea/SkyScannerChallenge.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/skyscanner7daychallenge.iml" filepath="$PROJECT_DIR$/skyscanner7daychallenge.iml" />
     </modules>
   </component>

@@ -2,26 +2,62 @@ package com.thelsien.challenge.skyscanner_7day_challenge;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.thelsien.challenge.skyscanner_7day_challenge.model.FlightDetail;
-import com.thelsien.challenge.skyscanner_7day_challenge.model.Itinerary;
 
 public class MainActivity extends AppCompatActivity implements MainActivityContract.View {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    private final int VISIBLE_THRESHOLD = 1;
+
     private MainActivityContract.Presenter mPresenter;
     private String mSessionKey;
     private int mPageIndex = 0;
+    private RecyclerView rvList;
+    private boolean isLoading = false;
+    private int lastVisibleItem, totalItemCount;
+    private LinearLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        rvList = findViewById(R.id.rv_list);
+        setupListView();
+        setupPagination();
+
         mPresenter = new MainActivityPresenter(this);
+        isLoading = true;
         mPresenter.createPollingRequest();
+    }
+
+    private void setupListView() {
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        rvList.setLayoutManager(layoutManager);
+    }
+
+    private void setupPagination() {
+        rvList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView,
+                                   int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                totalItemCount = layoutManager.getItemCount();
+                lastVisibleItem = layoutManager
+                        .findLastVisibleItemPosition();
+                if (!isLoading && totalItemCount <= (lastVisibleItem + VISIBLE_THRESHOLD)) {
+                    mPageIndex++;
+                    mPresenter.getPaginatedLivePricing(mSessionKey, mPageIndex);
+                    isLoading = true;
+                }
+            }
+        });
     }
 
     @Override
@@ -38,13 +74,23 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
     @Override
     public void onPaginatedRequestFinished(FlightDetail flightDetail) {
-        for (Itinerary itinerary : flightDetail.Itineraries) {
-            Log.d(TAG, "pollFlightDetails paginated itinerary: " + itinerary.InboundLegId + " " + itinerary.OutboundLegId);
+        isLoading = false;
+
+        addItemsToList(flightDetail);
+    }
+
+    private void addItemsToList(FlightDetail flightDetail) {
+        if (rvList.getAdapter() == null) {
+            rvList.setAdapter(new LivePricingAdapter());
         }
+
+        ((LivePricingAdapter) rvList.getAdapter()).addItems(flightDetail.Itineraries);
+        rvList.getAdapter().notifyDataSetChanged();
     }
 
     @Override
     public void onObservableError(Throwable error) {
         Log.e(TAG, "onObservableError: some error happened", error);
+        isLoading = false;
     }
 }

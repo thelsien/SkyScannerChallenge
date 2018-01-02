@@ -34,13 +34,6 @@ public class RetrofitHelper {
                 .build();
     }
 
-    public static Retrofit getGsonRetrofit(String baseUrl) {
-        return new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-    }
-
     public static Retrofit getGsonWithObservableRetrofit(String baseUrl) {
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
@@ -85,7 +78,7 @@ public class RetrofitHelper {
                 .create(SkyScannerApiService.class);
 
         final Map<String, String> queryOptions = new HashMap<>();
-        queryOptions.put("apikey", API_KEY); //TODO move to separate file
+        queryOptions.put("apikey", API_KEY);
         queryOptions.put("pageIndex", String.valueOf(0)); //initially 0.
 
         //query until we get UpdatesComplete status
@@ -105,7 +98,7 @@ public class RetrofitHelper {
                 .create(SkyScannerApiService.class);
 
         final Map<String, String> queryOptions = new HashMap<>();
-        queryOptions.put("apikey", API_KEY); //TODO move to separate file
+        queryOptions.put("apikey", API_KEY);
         queryOptions.put("pageIndex", String.valueOf(pageIndex));
 
         //one more query with paging
