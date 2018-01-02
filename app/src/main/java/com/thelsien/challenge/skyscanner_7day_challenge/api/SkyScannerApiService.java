@@ -32,8 +32,4 @@ public interface SkyScannerApiService {
     @Headers("Accept: application/json")
     @GET("pricing/v1.0/{SessionKey}")
     Observable<FlightDetail> getFlightDetailObservable(@Path("SessionKey") String sessionKey, @QueryMap Map<String, String> getParams);
-
-    @Headers("Accept: application/json")
-    @GET("pricing/v1.0/{SessionKey}")
-    Call<FlightDetail> getFlightDetail(@Path("SessionKey") String sessionKey, @QueryMap Map<String, String> getParams);
 }
