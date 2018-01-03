@@ -1,10 +1,11 @@
 package com.thelsien.challenge.skyscanner_7day_challenge.api;
 
+import android.util.Log;
+
 import com.thelsien.challenge.skyscanner_7day_challenge.model.FlightDetail;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
+import retrofit2.HttpException;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -28,7 +30,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitHelper {
 
-    private static final String API_KEY = "MYAPIKEY";
+    private static final String TAG = RetrofitHelper.class.getSimpleName();
+    private static final String API_KEY = "ss630745725358065467897349852985";
 
     public static Retrofit getBaseRetrofit(String baseUrl) {
         return new Retrofit.Builder()
@@ -101,6 +104,14 @@ public class RetrofitHelper {
                 .takeUntil(flightDetail -> {
                     return flightDetail.Status.equals("UpdatesComplete");
                 })
+                .retryWhen(errorsObservable -> errorsObservable.flatMap(error -> {
+                    if (error instanceof HttpException) {
+                        Log.e(TAG, "getPollingFlightDetailObservable: httpexception", error);
+                        return Observable.just(null);
+                    }
+
+                    return Observable.error(error);
+                }))
                 .filter(flightDetail -> flightDetail.Status.equals("UpdatesComplete"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">skyscanner-7day-challenge</string>
+    <string name="price_agent">via %s</string>
 </resources>

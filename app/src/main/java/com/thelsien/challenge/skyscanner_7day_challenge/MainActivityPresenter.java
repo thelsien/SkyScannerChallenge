@@ -69,6 +69,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                         flightDetail -> {
                             List<LivePricingRowModel> livePricings = new ArrayList<>();
 
+                            //TODO move code to separate class, DataManager?
                             for (Itinerary itinerary : flightDetail.Itineraries) {
                                 LivePricingRowModel rowModel = new LivePricingRowModel();
 
@@ -99,6 +100,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                 );
     }
 
+    //TODO separate class, DataManager?
     private LivePricingRowModel fillRowFromLegDetails(FlightDetail flightDetail, LivePricingRowModel rowModel, String legId, boolean isInboundLegId) {
         Leg leg = null;
         for (Leg flightLeg : flightDetail.Legs) {
@@ -167,6 +169,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
         return rowModel;
     }
 
+    //TODO separate class, DataManager?
     private String getStationName(List<Place> places, int stationId) {
         for (Place place : places) {
             if (place.Id == stationId) {

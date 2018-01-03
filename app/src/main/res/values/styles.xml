@@ -8,4 +8,28 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="WrapContent">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="MatchParentWidth">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="FillParent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="TitleText" parent="WrapContent">
+        <item name="android:textColor">@color/main_text</item>
+        <item name="android:textSize">@dimen/title_text_size</item>
+    </style>
+
+    <style name="DescriptionText" parent="WrapContent">
+        <item name="android:textSize">@dimen/description_text_size</item>
+        <item name="android:textColor">@color/alt_text</item>
+    </style>
 </resources>

@@ -5,8 +5,10 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.thelsien.challenge.skyscanner_7day_challenge.model.LivePricingRowModel;
 
 import java.text.DecimalFormat;
@@ -44,18 +46,40 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
 
         LivePricingRowModel rowModel = items.get(position);
 
-        holder.inboundLogo.setText(rowModel.inboundCarrierLogoUrl);
-        holder.outboundLogo.setText(rowModel.outboundCarrierLogoUrl);
+//        holder.inboundLogo.setText(rowModel.inboundCarrierLogoUrl);
+//        holder.outboundLogo.setText(rowModel.outboundCarrierLogoUrl);
+        Glide.with(holder.inboundLogo)
+                .load(rowModel.inboundCarrierLogoUrl)
+                .into(holder.inboundLogo);
 
-        Calendar c = Calendar.getInstance();
-        c.setTime(rowModel.inboundDepartureDate);
-        holder.inboundDeparture.setText(String.format(Locale.getDefault(), "%d-%d-%d %02d:%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE)));
-        c.setTime(rowModel.inboundArrivalDate);
-        holder.inboundArrival.setText(String.format(Locale.getDefault(), "%d-%d-%d %02d:%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE)));
-        c.setTime(rowModel.outboundDepartureDate);
-        holder.outboundDeparture.setText(String.format(Locale.getDefault(), "%d-%d-%d %02d:%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE)));
-        c.setTime(rowModel.outboundArrivalDate);
-        holder.outboundArrival.setText(String.format(Locale.getDefault(), "%d-%d-%d %02d:%02d", c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE)));
+        Glide.with(holder.outboundLogo)
+                .load(rowModel.outboundCarrierLogoUrl)
+                .into(holder.outboundLogo);
+
+        Calendar calDeparture = Calendar.getInstance();
+        Calendar calArrival = Calendar.getInstance();
+        calDeparture.setTime(rowModel.inboundDepartureDate);
+        calArrival.setTime(rowModel.inboundArrivalDate);
+
+        holder.inboundDepartureArrival.setText(String.format(
+                Locale.getDefault(),
+                "%02d:%02d - %02d:%02d",
+                calDeparture.get(Calendar.HOUR_OF_DAY),
+                calDeparture.get(Calendar.MINUTE),
+                calArrival.get(Calendar.HOUR_OF_DAY),
+                calArrival.get(Calendar.MINUTE)
+        ));
+
+        calDeparture.setTime(rowModel.outboundDepartureDate);
+        calArrival.setTime(rowModel.outboundArrivalDate);
+        holder.outboundDepartureArrival.setText(String.format(
+                Locale.getDefault(),
+                "%02d:%02d - %02d:%02d",
+                calDeparture.get(Calendar.HOUR_OF_DAY),
+                calDeparture.get(Calendar.MINUTE),
+                calArrival.get(Calendar.HOUR_OF_DAY),
+                calArrival.get(Calendar.MINUTE)
+        ));
 
         holder.inboundStationsCarrier.setText(String.format(Locale.getDefault(), "%s-%s, %s", rowModel.inboundOriginStationName, rowModel.inboundDestinationStationName, rowModel.inboundCarrierName));
         holder.outboundStationsCarrier.setText(String.format(Locale.getDefault(), "%s-%s, %s", rowModel.outboundOriginStationName, rowModel.outboundDestinationStationName, rowModel.outboundCarrierName));
@@ -88,7 +112,10 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
                     rowModel.priceCurrencyInfo.Symbol;
         }
         holder.price.setText(priceString);
-        holder.agent.setText(rowModel.agentName);
+        holder.agent.setText(String.format(
+                holder.agent.getContext().getString(R.string.price_agent),
+                rowModel.agentName
+        ));
     }
 
     private Pair<Integer, Integer> getHourAndMinutes(int duration) {
@@ -107,12 +134,10 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView outboundLogo;
-        private TextView outboundDeparture;
-        private TextView outboundArrival;
-        private TextView inboundDeparture;
-        private TextView inboundArrival;
-        private TextView inboundLogo;
+        private ImageView outboundLogo;
+        private ImageView inboundLogo;
+        private TextView outboundDepartureArrival;
+        private TextView inboundDepartureArrival;
         private TextView inboundStationsCarrier;
         private TextView outboundStationsCarrier;
         private TextView inboundDirectionality;
@@ -127,10 +152,8 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
 
             inboundLogo = itemView.findViewById(R.id.tv_inboundlogo);
             outboundLogo = itemView.findViewById(R.id.tv_outboundlogo);
-            outboundDeparture = itemView.findViewById(R.id.tv_outbound_departure);
-            outboundArrival = itemView.findViewById(R.id.tv_outbound_arrival);
-            inboundDeparture = itemView.findViewById(R.id.tv_inbound_departure);
-            inboundArrival = itemView.findViewById(R.id.tv_inbound_arrival);
+            outboundDepartureArrival = itemView.findViewById(R.id.tv_outbound_departure_arrival);
+            inboundDepartureArrival = itemView.findViewById(R.id.tv_inbound_departure_arrival);
             inboundStationsCarrier = itemView.findViewById(R.id.tv_inbound_stations_carrier);
             outboundStationsCarrier = itemView.findViewById(R.id.tv_outbound_stations_carrier);
             inboundDirectionality = itemView.findViewById(R.id.tv_inbound_directionality);

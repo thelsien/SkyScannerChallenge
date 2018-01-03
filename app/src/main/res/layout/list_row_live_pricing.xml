@@ -1,77 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_marginBottom="0dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="4dp"
+    app:elevation="@dimen/cardview_elevation">
 
-    <TextView
-        android:id="@+id/tv_inboundlogo"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tv_outboundlogo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <LinearLayout
+            android:id="@+id/wrapper_flight_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_inbound_departure"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="4dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="16dp"
+                android:weightSum="5">
 
-    <TextView
-        android:id="@+id/tv_inbound_arrival"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+                <ImageView
+                    android:id="@+id/tv_outboundlogo"
+                    android:layout_width="@dimen/carrier_image_height"
+                    android:layout_height="@dimen/carrier_image_height" />
 
-    <TextView
-        android:id="@+id/tv_outbound_departure"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="3"
+                    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_outbound_arrival"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_outbound_departure_arrival"
+                        style="@style/TitleText" />
 
-    <TextView
-        android:id="@+id/tv_inbound_stations_carrier"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_outbound_stations_carrier"
+                        style="@style/DescriptionText" />
+                </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_outbound_stations_carrier"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_inbound_directionality"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_outbound_directionality"
+                        style="@style/TitleText"
+                        android:layout_gravity="end" />
 
-    <TextView
-        android:id="@+id/tv_outbound_directionality"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tv_outbound_duration"
+                        style="@style/DescriptionText"
+                        android:layout_gravity="end" />
+                </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_inbound_duration"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_outbound_duration"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="4dp"
+                android:weightSum="5">
 
-    <TextView
-        android:id="@+id/tv_price"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+                <ImageView
+                    android:id="@+id/tv_inboundlogo"
+                    android:layout_width="@dimen/carrier_image_height"
+                    android:layout_height="@dimen/carrier_image_height" />
 
-    <TextView
-        android:id="@+id/tv_agent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
-</LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="3"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_inbound_departure_arrival"
+                        style="@style/TitleText" />
+
+                    <TextView
+                        android:id="@+id/tv_inbound_stations_carrier"
+                        style="@style/DescriptionText" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_inbound_directionality"
+                        style="@style/TitleText"
+                        android:layout_gravity="end" />
+
+
+                    <TextView
+                        android:id="@+id/tv_inbound_duration"
+                        style="@style/DescriptionText"
+                        android:layout_gravity="end" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/wrapper_flight_details"
+            android:background="@color/separator" />
+
+        <RelativeLayout
+            android:id="@+id/wrapper_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/separator"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:id="@+id/tv_price"
+                style="@style/TitleText"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true" />
+
+            <TextView
+                android:id="@+id/tv_agent"
+                style="@style/DescriptionText"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/tv_price" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
