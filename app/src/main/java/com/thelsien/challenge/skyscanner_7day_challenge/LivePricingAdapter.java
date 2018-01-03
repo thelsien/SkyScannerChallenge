@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.thelsien.challenge.skyscanner_7day_challenge.model.LivePricingRowModel;
+import com.thelsien.challenge.skyscanner_7day_challenge.model.LivePricingAdapterRow;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -23,9 +23,9 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
 
     private static final String TAG = LivePricingAdapter.class.getSimpleName();
 
-    private List<LivePricingRowModel> items = new ArrayList<>();
+    private List<LivePricingAdapterRow> items = new ArrayList<>();
 
-    public void addItems(List<LivePricingRowModel> newItems) {
+    public void addItems(List<LivePricingAdapterRow> newItems) {
         items.addAll(newItems);
     }
 
@@ -39,7 +39,7 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        LivePricingRowModel rowModel = items.get(position);
+        LivePricingAdapterRow rowModel = items.get(position);
 
         loadLogos(holder, rowModel);
         setDeparturesAndArrivals(holder, rowModel);
@@ -49,7 +49,7 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
         setPriceAndAgent(holder, rowModel);
     }
 
-    private void loadLogos(ViewHolder holder, LivePricingRowModel rowModel) {
+    private void loadLogos(ViewHolder holder, LivePricingAdapterRow rowModel) {
         Glide.with(holder.inboundLogo)
                 .load(rowModel.inboundCarrierLogoUrl)
                 .into(holder.inboundLogo);
@@ -59,7 +59,7 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
                 .into(holder.outboundLogo);
     }
 
-    private void setDeparturesAndArrivals(ViewHolder holder, LivePricingRowModel rowModel) {
+    private void setDeparturesAndArrivals(ViewHolder holder, LivePricingAdapterRow rowModel) {
         Calendar calDeparture = Calendar.getInstance();
         Calendar calArrival = Calendar.getInstance();
 
@@ -86,7 +86,7 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
         ));
     }
 
-    private void setStationsAndCarriers(ViewHolder holder, LivePricingRowModel rowModel) {
+    private void setStationsAndCarriers(ViewHolder holder, LivePricingAdapterRow rowModel) {
         holder.inboundStationsCarrier.setText(String.format(
                 Locale.getDefault(),
                 holder.inboundStationsCarrier.getContext().getString(R.string.stations_carrier_template),
@@ -103,12 +103,12 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
         ));
     }
 
-    private void setDirectionalities(ViewHolder holder, LivePricingRowModel rowModel) {
+    private void setDirectionalities(ViewHolder holder, LivePricingAdapterRow rowModel) {
         holder.inboundDirectionality.setText(rowModel.inboundDirectionality);
         holder.outboundDirectionality.setText(rowModel.outboundDirectionality);
     }
 
-    private void setDurations(ViewHolder holder, LivePricingRowModel rowModel) {
+    private void setDurations(ViewHolder holder, LivePricingAdapterRow rowModel) {
         Pair<Integer, Integer> hoursAndMinutes = getHourAndMinutes(rowModel.inboundDuration);
         holder.inboundDuration.setText(String.format(
                 Locale.getDefault(),
@@ -126,7 +126,7 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
         ));
     }
 
-    private void setPriceAndAgent(ViewHolder holder, LivePricingRowModel rowModel) {
+    private void setPriceAndAgent(ViewHolder holder, LivePricingAdapterRow rowModel) {
         String priceString = getPriceString(rowModel);
         holder.price.setText(priceString);
         holder.agent.setText(String.format(
@@ -136,7 +136,7 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
     }
 
     @NonNull
-    private String getPriceString(LivePricingRowModel rowModel) {
+    private String getPriceString(LivePricingAdapterRow rowModel) {
         DecimalFormat decimalFormat = getDecimalFormatForCurrency(rowModel);
         String priceString = decimalFormat.format(rowModel.price);
 
@@ -153,7 +153,7 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
     }
 
     @NonNull
-    private DecimalFormat getDecimalFormatForCurrency(LivePricingRowModel rowModel) {
+    private DecimalFormat getDecimalFormatForCurrency(LivePricingAdapterRow rowModel) {
         DecimalFormat decimalFormat = new DecimalFormat();
         DecimalFormatSymbols symbol = new DecimalFormatSymbols();
         symbol.setDecimalSeparator(rowModel.priceCurrencyInfo.DecimalSeparator.charAt(0));

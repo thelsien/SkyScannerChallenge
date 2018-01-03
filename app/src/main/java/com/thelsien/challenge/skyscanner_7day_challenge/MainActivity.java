@@ -1,7 +1,6 @@
 package com.thelsien.challenge.skyscanner_7day_challenge;
 
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.thelsien.challenge.skyscanner_7day_challenge.model.LivePricingRowModel;
+import com.thelsien.challenge.skyscanner_7day_challenge.model.LivePricingAdapterRow;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -104,13 +103,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     }
 
     @Override
-    public void onPaginatedRequestFinished(List<LivePricingRowModel> livePricings) {
+    public void onPaginatedRequestFinished(List<LivePricingAdapterRow> livePricings) {
         isLoading = false;
 
         addItemsToList(livePricings);
     }
 
-    private void addItemsToList(List<LivePricingRowModel> livePricings) {
+    private void addItemsToList(List<LivePricingAdapterRow> livePricings) {
         if (rvList.getAdapter() == null) {
             rvList.setAdapter(new LivePricingAdapter());
         }

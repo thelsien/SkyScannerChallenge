@@ -3,7 +3,7 @@ package com.thelsien.challenge.skyscanner_7day_challenge;
 import com.thelsien.challenge.skyscanner_7day_challenge.api.RetrofitHelper;
 import com.thelsien.challenge.skyscanner_7day_challenge.model.DataHelper;
 import com.thelsien.challenge.skyscanner_7day_challenge.model.Itinerary;
-import com.thelsien.challenge.skyscanner_7day_challenge.model.LivePricingRowModel;
+import com.thelsien.challenge.skyscanner_7day_challenge.model.LivePricingAdapterRow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,11 +52,11 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                 .subscribe(
                         livePricing -> {
 
-                            List<LivePricingRowModel> livePricings = new ArrayList<>();
+                            List<LivePricingAdapterRow> livePricings = new ArrayList<>();
 
                             //TODO move code to separate class, DataManager?
                             for (Itinerary itinerary : livePricing.Itineraries) {
-                                LivePricingRowModel rowModel = DataHelper.getRowModelData(livePricing, itinerary);
+                                LivePricingAdapterRow rowModel = DataHelper.getRowModelData(livePricing, itinerary);
                                 livePricings.add(rowModel);
                             }
 

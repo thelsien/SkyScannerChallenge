@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-public class LivePricingRowModel {
+public class LivePricingAdapterRow {
     public static final String BASE_IMAGE_URL = "https://logos.skyscnr.com/images/airlines/favicon/";
 
     public String inboundCarrierLogoUrl;

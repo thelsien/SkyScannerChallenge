@@ -1,6 +1,6 @@
 package com.thelsien.challenge.skyscanner_7day_challenge;
 
-import com.thelsien.challenge.skyscanner_7day_challenge.model.LivePricingRowModel;
+import com.thelsien.challenge.skyscanner_7day_challenge.model.LivePricingAdapterRow;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public class MainActivityContract {
 
         void onPollingFinished();
 
-        void onPaginatedRequestFinished(List<LivePricingRowModel> livePricings);
+        void onPaginatedRequestFinished(List<LivePricingAdapterRow> livePricings);
 
         void onObservableError(Throwable error);
 

@@ -13,8 +13,8 @@ public class DataHelper {
     private static final String TAG = DataHelper.class.getSimpleName();
 
     @NonNull
-    public static LivePricingRowModel getRowModelData(LivePricing livePricing, Itinerary itinerary) {
-        LivePricingRowModel rowModel = new LivePricingRowModel();
+    public static LivePricingAdapterRow getRowModelData(LivePricing livePricing, Itinerary itinerary) {
+        LivePricingAdapterRow rowModel = new LivePricingAdapterRow();
 
         fillRowFromLegDetails(livePricing, rowModel, itinerary.InboundLegId, true);
         fillRowFromLegDetails(livePricing, rowModel, itinerary.OutboundLegId, false);
@@ -25,7 +25,7 @@ public class DataHelper {
         return rowModel;
     }
 
-    private static void getPricingAndAgentForRowModel(LivePricing livePricing, Itinerary itinerary, LivePricingRowModel rowModel) {
+    private static void getPricingAndAgentForRowModel(LivePricing livePricing, Itinerary itinerary, LivePricingAdapterRow rowModel) {
         PricingOption pricingOption = itinerary.PricingOptions.get(0); //only getting the first one for this demo app
         rowModel.price = pricingOption.Price;
 
@@ -37,7 +37,7 @@ public class DataHelper {
         }
     }
 
-    private static void fillRowFromLegDetails(LivePricing livePricing, LivePricingRowModel rowModel, String legId, boolean isInboundLegId) {
+    private static void fillRowFromLegDetails(LivePricing livePricing, LivePricingAdapterRow rowModel, String legId, boolean isInboundLegId) {
         Leg leg = findLeg(livePricing, legId);
 
         if (leg == null) {
@@ -50,7 +50,7 @@ public class DataHelper {
         getDirectionalityAndDuration(livePricing, rowModel, isInboundLegId, leg);
     }
 
-    private static void getDirectionalityAndDuration(LivePricing livePricing, LivePricingRowModel rowModel, boolean isInboundLegId, Leg leg) {
+    private static void getDirectionalityAndDuration(LivePricing livePricing, LivePricingAdapterRow rowModel, boolean isInboundLegId, Leg leg) {
         //only taking the first, because it does not contain more than one for this distance.
         int segmentId = leg.SegmentIds.get(0);
         for (Segment segment : livePricing.Segments) {
@@ -67,7 +67,7 @@ public class DataHelper {
         }
     }
 
-    private static void getStationNames(LivePricing livePricing, LivePricingRowModel rowModel, boolean isInboundLegId, Leg leg) {
+    private static void getStationNames(LivePricing livePricing, LivePricingAdapterRow rowModel, boolean isInboundLegId, Leg leg) {
         if (isInboundLegId) {
             rowModel.inboundOriginStationName = getStationName(livePricing.Places, leg.OriginStation);
             rowModel.inboundDestinationStationName = getStationName(livePricing.Places, leg.DestinationStation);
@@ -77,7 +77,7 @@ public class DataHelper {
         }
     }
 
-    private static void getDepartureArrivalDate(LivePricingRowModel rowModel, boolean isInboundLegId, Leg leg) {
+    private static void getDepartureArrivalDate(LivePricingAdapterRow rowModel, boolean isInboundLegId, Leg leg) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss", Locale.getDefault());
         try {
             if (isInboundLegId) {
@@ -93,11 +93,11 @@ public class DataHelper {
         }
     }
 
-    private static void getCarrierInfo(LivePricing livePricing, LivePricingRowModel rowModel, boolean isInboundLegId, Leg leg) {
+    private static void getCarrierInfo(LivePricing livePricing, LivePricingAdapterRow rowModel, boolean isInboundLegId, Leg leg) {
         int carrierId = leg.Carriers.get(0);
         for (Carrier carrier : livePricing.Carriers) {
             if (carrier.Id == carrierId) {
-                String imgUrl = LivePricingRowModel.BASE_IMAGE_URL + carrier.Code + ".png";
+                String imgUrl = LivePricingAdapterRow.BASE_IMAGE_URL + carrier.Code + ".png";
                 if (isInboundLegId) {
                     rowModel.inboundCarrierLogoUrl = imgUrl;
                     rowModel.inboundCarrierName = carrier.Name;
