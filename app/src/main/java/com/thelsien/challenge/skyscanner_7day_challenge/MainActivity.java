@@ -4,12 +4,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
-import com.thelsien.challenge.skyscanner_7day_challenge.model.FlightDetail;
 import com.thelsien.challenge.skyscanner_7day_challenge.model.LivePricingRowModel;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements MainActivityContract.View {
 
@@ -24,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     private boolean isLoading = false;
     private int lastVisibleItem, totalItemCount;
     private LinearLayoutManager layoutManager;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +35,32 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         setContentView(R.layout.activity_main);
 
         rvList = findViewById(R.id.rv_list);
+        toolbar = findViewById(R.id.tb_toolbar);
+
+        setupToolbar();
         setupListView();
         setupPagination();
 
         mPresenter = new MainActivityPresenter(this);
         isLoading = true;
         mPresenter.createPollingRequest();
+    }
+
+    private void setupToolbar() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd", Locale.getDefault());
+        Calendar calendar = Utils.getNextMonday();
+        Calendar calendarNextDay = Calendar.getInstance();
+        calendarNextDay.setTime(calendar.getTime());
+        calendarNextDay.add(Calendar.DATE, 1);
+
+        toolbar.setTitle(R.string.route_name);
+        toolbar.setSubtitle(String.format(
+                getString(R.string.route_subtitle),
+                dateFormat.format(calendar.getTime()),
+                dateFormat.format(calendarNextDay.getTime()),
+                1
+        ));
+        setSupportActionBar(toolbar);
     }
 
     private void setupListView() {
@@ -47,8 +71,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     private void setupPagination() {
         rvList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView,
-                                   int dx, int dy) {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
                 totalItemCount = layoutManager.getItemCount();

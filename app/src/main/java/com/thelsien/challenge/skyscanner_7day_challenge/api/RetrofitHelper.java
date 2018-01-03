@@ -2,6 +2,7 @@ package com.thelsien.challenge.skyscanner_7day_challenge.api;
 
 import android.util.Log;
 
+import com.thelsien.challenge.skyscanner_7day_challenge.Utils;
 import com.thelsien.challenge.skyscanner_7day_challenge.model.FlightDetail;
 
 import java.net.InetAddress;
@@ -31,7 +32,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitHelper {
 
     private static final String TAG = RetrofitHelper.class.getSimpleName();
-    private static final String API_KEY = "ss630745725358065467897349852985";
+    private static final String API_KEY = "MYAPIKEY";
 
     public static Retrofit getBaseRetrofit(String baseUrl) {
         return new Retrofit.Builder()
@@ -55,16 +56,7 @@ public class RetrofitHelper {
                             .getBaseRetrofit(SkyScannerApiService.BASE_URL)
                             .create(SkyScannerApiService.class);
 
-                    Calendar calendar = Calendar.getInstance();
-                    //task specified we need to get the NEXT monday's live pricing,
-                    //so even if today is monday, I skip to the next monday.
-                    if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
-                        calendar.add(Calendar.DATE, 1);
-                    }
-
-                    while (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.MONDAY) {
-                        calendar.add(Calendar.DATE, 1);
-                    }
+                    Calendar calendar = Utils.getNextMonday();
 
                     Map<String, String> queryOptions = new HashMap<>();
                     queryOptions.put("apikey", API_KEY);
@@ -107,7 +99,9 @@ public class RetrofitHelper {
                 .retryWhen(errorsObservable -> errorsObservable.flatMap(error -> {
                     if (error instanceof HttpException) {
                         Log.e(TAG, "getPollingFlightDetailObservable: httpexception", error);
-                        return Observable.just(null);
+                        FlightDetail fd = new FlightDetail();
+                        fd.Status = "UpdatesPending";
+                        return Observable.just(fd).delay(1, TimeUnit.SECONDS);
                     }
 
                     return Observable.error(error);
