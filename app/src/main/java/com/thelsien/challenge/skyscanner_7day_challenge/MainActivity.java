@@ -8,9 +8,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.thelsien.challenge.skyscanner_7day_challenge.model.LivePricingAdapterRow;
 
+import java.text.BreakIterator;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     private LinearLayoutManager layoutManager;
     private Toolbar toolbar;
     private ProgressBar progressBar;
+    private TextView errorMessageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         progressBar = findViewById(R.id.pb_progressbar);
         rvList = findViewById(R.id.rv_list);
         toolbar = findViewById(R.id.tb_toolbar);
+        errorMessageView = findViewById(R.id.tv_error_message);
 
         setupToolbar();
         setupListView();
@@ -120,8 +124,18 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
 
     @Override
     public void onObservableError(Throwable error) {
+        if (!Utils.isNetworkAvailable(this) && (rvList.getAdapter() == null || rvList.getAdapter().getItemCount() == 0)) {
+            showProgressIndicator(false);
+            showErrorMessage(getString(R.string.error_no_network));
+        }
+
         Log.e(TAG, "onObservableError: some error happened", error);
         isLoading = false;
+    }
+
+    private void showErrorMessage(String message) {
+        errorMessageView.setVisibility(View.VISIBLE);
+        errorMessageView.setText(message);
     }
 
     @Override

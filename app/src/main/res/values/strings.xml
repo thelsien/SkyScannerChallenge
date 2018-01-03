@@ -10,4 +10,5 @@
     <string name="outbound_logo_carrier_description">Outbound carrier logo</string>
     <string name="results_counter_text">365 of 365 results</string>
     <string name="inbound_logo_carrier_description">Inbound carrier logo</string>
+    <string name="error_no_network">No network available.</string>
 </resources>

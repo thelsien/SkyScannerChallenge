@@ -1,5 +1,8 @@
 package com.thelsien.challenge.skyscanner_7day_challenge;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 
 import java.net.InetAddress;
@@ -57,5 +60,12 @@ public class Utils {
         } catch (Exception ex) {
         } // for now eat exceptions
         return "";
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
+
+        return networkInfo != null && networkInfo.isConnected();
     }
 }
