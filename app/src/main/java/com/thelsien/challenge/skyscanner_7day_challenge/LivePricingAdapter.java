@@ -1,5 +1,6 @@
 package com.thelsien.challenge.skyscanner_7day_challenge;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -17,10 +18,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-
-/**
- * Created by adamszucs on 2018. 01. 02..
- */
 
 public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.ViewHolder> {
 
@@ -42,12 +39,17 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-//        Itinerary itinerary = items.get(position);
-
         LivePricingRowModel rowModel = items.get(position);
 
-//        holder.inboundLogo.setText(rowModel.inboundCarrierLogoUrl);
-//        holder.outboundLogo.setText(rowModel.outboundCarrierLogoUrl);
+        loadLogos(holder, rowModel);
+        setDeparturesAndArrivals(holder, rowModel);
+        setStationsAndCarriers(holder, rowModel);
+        setDirectionalities(holder, rowModel);
+        setDurations(holder, rowModel);
+        setPriceAndAgent(holder, rowModel);
+    }
+
+    private void loadLogos(ViewHolder holder, LivePricingRowModel rowModel) {
         Glide.with(holder.inboundLogo)
                 .load(rowModel.inboundCarrierLogoUrl)
                 .into(holder.inboundLogo);
@@ -55,15 +57,17 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
         Glide.with(holder.outboundLogo)
                 .load(rowModel.outboundCarrierLogoUrl)
                 .into(holder.outboundLogo);
+    }
 
+    private void setDeparturesAndArrivals(ViewHolder holder, LivePricingRowModel rowModel) {
         Calendar calDeparture = Calendar.getInstance();
         Calendar calArrival = Calendar.getInstance();
+
         calDeparture.setTime(rowModel.inboundDepartureDate);
         calArrival.setTime(rowModel.inboundArrivalDate);
-
         holder.inboundDepartureArrival.setText(String.format(
                 Locale.getDefault(),
-                "%02d:%02d - %02d:%02d",
+                holder.inboundDepartureArrival.getContext().getString(R.string.departure_arrival_template),
                 calDeparture.get(Calendar.HOUR_OF_DAY),
                 calDeparture.get(Calendar.MINUTE),
                 calArrival.get(Calendar.HOUR_OF_DAY),
@@ -74,34 +78,68 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
         calArrival.setTime(rowModel.outboundArrivalDate);
         holder.outboundDepartureArrival.setText(String.format(
                 Locale.getDefault(),
-                "%02d:%02d - %02d:%02d",
+                holder.outboundDepartureArrival.getContext().getString(R.string.departure_arrival_template),
                 calDeparture.get(Calendar.HOUR_OF_DAY),
                 calDeparture.get(Calendar.MINUTE),
                 calArrival.get(Calendar.HOUR_OF_DAY),
                 calArrival.get(Calendar.MINUTE)
         ));
+    }
 
-        holder.inboundStationsCarrier.setText(String.format(Locale.getDefault(), "%s-%s, %s", rowModel.inboundOriginStationName, rowModel.inboundDestinationStationName, rowModel.inboundCarrierName));
-        holder.outboundStationsCarrier.setText(String.format(Locale.getDefault(), "%s-%s, %s", rowModel.outboundOriginStationName, rowModel.outboundDestinationStationName, rowModel.outboundCarrierName));
+    private void setStationsAndCarriers(ViewHolder holder, LivePricingRowModel rowModel) {
+        holder.inboundStationsCarrier.setText(String.format(
+                Locale.getDefault(),
+                holder.inboundStationsCarrier.getContext().getString(R.string.stations_carrier_template),
+                rowModel.inboundOriginStationName,
+                rowModel.inboundDestinationStationName,
+                rowModel.inboundCarrierName
+        ));
+        holder.outboundStationsCarrier.setText(String.format(
+                Locale.getDefault(),
+                holder.outboundStationsCarrier.getContext().getString(R.string.stations_carrier_template),
+                rowModel.outboundOriginStationName,
+                rowModel.outboundDestinationStationName,
+                rowModel.outboundCarrierName
+        ));
+    }
 
+    private void setDirectionalities(ViewHolder holder, LivePricingRowModel rowModel) {
         holder.inboundDirectionality.setText(rowModel.inboundDirectionality);
         holder.outboundDirectionality.setText(rowModel.outboundDirectionality);
+    }
 
+    private void setDurations(ViewHolder holder, LivePricingRowModel rowModel) {
         Pair<Integer, Integer> hoursAndMinutes = getHourAndMinutes(rowModel.inboundDuration);
-        holder.inboundDuration.setText(String.format(Locale.getDefault(), "%dh %dm", hoursAndMinutes.first, hoursAndMinutes.second));
+        holder.inboundDuration.setText(String.format(
+                Locale.getDefault(),
+                holder.inboundDuration.getContext().getString(R.string.duration_template),
+                hoursAndMinutes.first,
+                hoursAndMinutes.second
+        ));
+
         hoursAndMinutes = getHourAndMinutes(rowModel.outboundDuration);
-        holder.outboundDuration.setText(String.format(Locale.getDefault(), "%dh %dm", hoursAndMinutes.first, hoursAndMinutes.second));
+        holder.outboundDuration.setText(String.format(
+                Locale.getDefault(),
+                holder.outboundDuration.getContext().getString(R.string.duration_template),
+                hoursAndMinutes.first,
+                hoursAndMinutes.second
+        ));
+    }
 
-        DecimalFormat decimalFormat = new DecimalFormat();
-        DecimalFormatSymbols symbol = new DecimalFormatSymbols();
-        symbol.setDecimalSeparator(rowModel.priceCurrencyInfo.DecimalSeparator.charAt(0));
-        symbol.setGroupingSeparator(rowModel.priceCurrencyInfo.ThousandsSeparator.charAt(0));
-        symbol.setCurrencySymbol(rowModel.priceCurrencyInfo.Symbol);
-        decimalFormat.setDecimalFormatSymbols(symbol);
-        decimalFormat.setMaximumFractionDigits(rowModel.priceCurrencyInfo.DecimalDigits);
-        decimalFormat.setMinimumFractionDigits(rowModel.priceCurrencyInfo.DecimalDigits);
+    private void setPriceAndAgent(ViewHolder holder, LivePricingRowModel rowModel) {
+        String priceString = getPriceString(rowModel);
+        holder.price.setText(priceString);
+        holder.agent.setText(String.format(
+                holder.agent.getContext().getString(R.string.price_agent),
+                rowModel.agentName
+        ));
+    }
 
+    @NonNull
+    private String getPriceString(LivePricingRowModel rowModel) {
+        DecimalFormat decimalFormat = getDecimalFormatForCurrency(rowModel);
         String priceString = decimalFormat.format(rowModel.price);
+
         if (rowModel.priceCurrencyInfo.SymbolOnLeft) {
             priceString = rowModel.priceCurrencyInfo.Symbol +
                     (rowModel.priceCurrencyInfo.SpaceBetweenAmountAndSymbol ? " " : "") +
@@ -111,11 +149,20 @@ public class LivePricingAdapter extends RecyclerView.Adapter<LivePricingAdapter.
                     (rowModel.priceCurrencyInfo.SpaceBetweenAmountAndSymbol ? " " : "") +
                     rowModel.priceCurrencyInfo.Symbol;
         }
-        holder.price.setText(priceString);
-        holder.agent.setText(String.format(
-                holder.agent.getContext().getString(R.string.price_agent),
-                rowModel.agentName
-        ));
+        return priceString;
+    }
+
+    @NonNull
+    private DecimalFormat getDecimalFormatForCurrency(LivePricingRowModel rowModel) {
+        DecimalFormat decimalFormat = new DecimalFormat();
+        DecimalFormatSymbols symbol = new DecimalFormatSymbols();
+        symbol.setDecimalSeparator(rowModel.priceCurrencyInfo.DecimalSeparator.charAt(0));
+        symbol.setGroupingSeparator(rowModel.priceCurrencyInfo.ThousandsSeparator.charAt(0));
+        symbol.setCurrencySymbol(rowModel.priceCurrencyInfo.Symbol);
+        decimalFormat.setDecimalFormatSymbols(symbol);
+        decimalFormat.setMaximumFractionDigits(rowModel.priceCurrencyInfo.DecimalDigits);
+        decimalFormat.setMinimumFractionDigits(rowModel.priceCurrencyInfo.DecimalDigits);
+        return decimalFormat;
     }
 
     private Pair<Integer, Integer> getHourAndMinutes(int duration) {

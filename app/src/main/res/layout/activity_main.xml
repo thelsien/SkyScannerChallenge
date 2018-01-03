@@ -37,11 +37,11 @@
 
             <Button
                 style="@style/WrapContent"
-                android:background="?attr/selectableItemBackground"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:text="SORT AND FILTERS"
+                android:background="?attr/selectableItemBackground"
+                android:text="@string/sort_and_filters_label"
                 android:textColor="@color/main_text" />
         </RelativeLayout>
     </android.support.design.widget.AppBarLayout>

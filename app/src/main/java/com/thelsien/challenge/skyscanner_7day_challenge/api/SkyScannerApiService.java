@@ -1,6 +1,6 @@
 package com.thelsien.challenge.skyscanner_7day_challenge.api;
 
-import com.thelsien.challenge.skyscanner_7day_challenge.model.FlightDetail;
+import com.thelsien.challenge.skyscanner_7day_challenge.model.LivePricing;
 
 import java.util.Map;
 
@@ -15,10 +15,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.QueryMap;
 
-/**
- * Created by frodo on 2018-01-01.
- */
-
 public interface SkyScannerApiService {
     String BASE_URL = "http://partners.api.skyscanner.net/apiservices/";
 
@@ -31,5 +27,5 @@ public interface SkyScannerApiService {
 
     @Headers("Accept: application/json")
     @GET("pricing/v1.0/{SessionKey}")
-    Observable<FlightDetail> getFlightDetailObservable(@Path("SessionKey") String sessionKey, @QueryMap Map<String, String> getParams);
+    Observable<LivePricing> getFlightDetailObservable(@Path("SessionKey") String sessionKey, @QueryMap Map<String, String> getParams);
 }

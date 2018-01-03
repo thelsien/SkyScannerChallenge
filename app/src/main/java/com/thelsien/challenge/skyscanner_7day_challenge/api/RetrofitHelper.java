@@ -3,14 +3,10 @@ package com.thelsien.challenge.skyscanner_7day_challenge.api;
 import android.util.Log;
 
 import com.thelsien.challenge.skyscanner_7day_challenge.Utils;
-import com.thelsien.challenge.skyscanner_7day_challenge.model.FlightDetail;
+import com.thelsien.challenge.skyscanner_7day_challenge.model.LivePricing;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -24,10 +20,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-/**
- * Created by adamszucs on 2018. 01. 02..
- */
 
 public class RetrofitHelper {
 
@@ -70,10 +62,9 @@ public class RetrofitHelper {
                     queryOptions.put("inbounddate", android.text.format.DateFormat.format("yyyy-MM-dd", calendar).toString());
                     queryOptions.put("adults", "1");
 
-                    Call<Void> pollingRequestCall = service.createPollingRequest(getIPAddress(true), queryOptions);
+                    Call<Void> pollingRequestCall = service.createPollingRequest(Utils.getIPAddress(true), queryOptions);
 
                     Response<Void> response = pollingRequestCall.execute();
-
                     e.onNext(response.headers().get("Location"));
                     e.onComplete();
                 })
@@ -81,7 +72,7 @@ public class RetrofitHelper {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public static Observable<FlightDetail> getPollingFlightDetailObservable(String sessionKey) {
+    public static Observable<LivePricing> getPollingLivePricingObservable(String sessionKey) {
         final SkyScannerApiService service = RetrofitHelper
                 .getGsonWithObservableRetrofit(SkyScannerApiService.BASE_URL)
                 .create(SkyScannerApiService.class);
@@ -93,25 +84,25 @@ public class RetrofitHelper {
         //query until we get UpdatesComplete status
         return service.getFlightDetailObservable(sessionKey, queryOptions)
                 .repeatWhen(objectObservable -> objectObservable.delay(1, TimeUnit.SECONDS))
-                .takeUntil(flightDetail -> {
-                    return flightDetail.Status.equals("UpdatesComplete");
+                .takeUntil(livePricing -> {
+                    return livePricing.Status.equals("UpdatesComplete");
                 })
                 .retryWhen(errorsObservable -> errorsObservable.flatMap(error -> {
                     if (error instanceof HttpException) {
-                        Log.e(TAG, "getPollingFlightDetailObservable: httpexception", error);
-                        FlightDetail fd = new FlightDetail();
+                        Log.e(TAG, "getPollingLivePricingObservable: httpexception", error);
+                        LivePricing fd = new LivePricing();
                         fd.Status = "UpdatesPending";
                         return Observable.just(fd).delay(1, TimeUnit.SECONDS);
                     }
 
                     return Observable.error(error);
                 }))
-                .filter(flightDetail -> flightDetail.Status.equals("UpdatesComplete"))
+                .filter(livePricing -> livePricing.Status.equals("UpdatesComplete"))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public static Observable<FlightDetail> getPaginatedFlightDetailObservable(String sessionKey, int pageIndex) {
+    public static Observable<LivePricing> getPaginatedLivePricingObservable(String sessionKey, int pageIndex) {
         final SkyScannerApiService service = RetrofitHelper
                 .getGsonWithObservableRetrofit(SkyScannerApiService.BASE_URL)
                 .create(SkyScannerApiService.class);
@@ -124,39 +115,5 @@ public class RetrofitHelper {
         return service.getFlightDetailObservable(sessionKey, queryOptions)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    /**
-     * Get IP address from first non-localhost interface
-     *
-     * @param useIPv4 true=return ipv4, false=return ipv6
-     * @return address or empty string
-     */
-    private static String getIPAddress(boolean useIPv4) {
-        try {
-            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
-            for (NetworkInterface intf : interfaces) {
-                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
-                for (InetAddress addr : addrs) {
-                    if (!addr.isLoopbackAddress()) {
-                        String sAddr = addr.getHostAddress();
-                        //boolean isIPv4 = InetAddressUtils.isIPv4Address(sAddr);
-                        boolean isIPv4 = sAddr.indexOf(':') < 0;
-
-                        if (useIPv4) {
-                            if (isIPv4)
-                                return sAddr;
-                        } else {
-                            if (!isIPv4) {
-                                int delim = sAddr.indexOf('%'); // drop ip6 zone suffix
-                                return delim < 0 ? sAddr.toUpperCase() : sAddr.substring(0, delim).toUpperCase();
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception ex) {
-        } // for now eat exceptions
-        return "";
     }
 }

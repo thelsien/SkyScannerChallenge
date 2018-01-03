@@ -3,4 +3,8 @@
     <string name="price_agent">via %s</string>
     <string name="route_name">EDI-LHR</string>
     <string name="route_subtitle">%s - %s, %d adults</string>
+    <string name="sort_and_filters_label"><![CDATA[SORT & FILTERS]]></string>
+    <string name="departure_arrival_template">%02d:%02d - %02d:%02d</string>
+    <string name="stations_carrier_template">%s-%s, %s</string>
+    <string name="duration_template">%dh %dm</string>
 </resources>

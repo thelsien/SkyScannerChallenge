@@ -4,10 +4,6 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-/**
- * Created by frodo on 2018-01-01.
- */
-
 public class Itinerary {
     public String OutboundLegId;
     public String InboundLegId;

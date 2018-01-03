@@ -4,10 +4,6 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-/**
- * Created by frodo on 2018-01-02.
- */
-
 public class LivePricingRowModel {
     public static final String BASE_IMAGE_URL = "https://logos.skyscnr.com/images/airlines/favicon/";
 

@@ -2,11 +2,7 @@ package com.thelsien.challenge.skyscanner_7day_challenge.model;
 
 import java.util.List;
 
-/**
- * Created by frodo on 2018-01-01.
- */
-
-public class FlightDetail {
+public class LivePricing {
     public String SessionKey;
     public String Status;
     public List<Itinerary> Itineraries;
