@@ -7,4 +7,7 @@
     <string name="departure_arrival_template">%02d:%02d - %02d:%02d</string>
     <string name="stations_carrier_template">%s-%s, %s</string>
     <string name="duration_template">%dh %dm</string>
+    <string name="outbound_logo_carrier_description">Outbound carrier logo</string>
+    <string name="results_counter_text">365 of 365 results</string>
+    <string name="inbound_logo_carrier_description">Inbound carrier logo</string>
 </resources>

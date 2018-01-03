@@ -1,11 +1,14 @@
 package com.thelsien.challenge.skyscanner_7day_challenge;
 
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.thelsien.challenge.skyscanner_7day_challenge.model.LivePricingRowModel;
 
@@ -28,12 +31,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     private int lastVisibleItem, totalItemCount;
     private LinearLayoutManager layoutManager;
     private Toolbar toolbar;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        progressBar = findViewById(R.id.pb_progressbar);
         rvList = findViewById(R.id.rv_list);
         toolbar = findViewById(R.id.tb_toolbar);
 
@@ -118,5 +123,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     public void onObservableError(Throwable error) {
         Log.e(TAG, "onObservableError: some error happened", error);
         isLoading = false;
+    }
+
+    @Override
+    public void showProgressIndicator(boolean isVisible) {
+        progressBar.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        rvList.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
 }

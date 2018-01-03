@@ -20,6 +20,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     @Override
     public void createPollingRequest() {
+        mMainActivity.showProgressIndicator(true);
         RetrofitHelper.getCreatePollingObservable()
                 .subscribe(
                         serverResponse -> {
@@ -60,6 +61,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
                             }
 
                             mMainActivity.onPaginatedRequestFinished(livePricings);
+                            mMainActivity.showProgressIndicator(false);
                         },
                         error -> {
                             mMainActivity.onObservableError(error);

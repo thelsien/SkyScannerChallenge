@@ -13,6 +13,8 @@ public class MainActivityContract {
         void onPaginatedRequestFinished(List<LivePricingRowModel> livePricings);
 
         void onObservableError(Throwable error);
+
+        void showProgressIndicator(boolean isVisible);
     }
 
     public interface Presenter {
